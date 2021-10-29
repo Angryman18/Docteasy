@@ -4,10 +4,15 @@ import { Link } from "react-router-dom";
 import * as Scroll from "react-scroll";
 // import Form from "../Auth/Login/Form";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import LoggedInUser from "./AuthUser/LoggedInUser";
 
 const DesktopNavbar = ({ Home, About, Faq, Reviews, Login, Signup }) => {
   const ScrollLink = Scroll.Link;
+
   const dispatch = useDispatch();
+  const ifUser = useSelector((state) => state.AuthReducer.ifUser);
+
   const loginHandler = (e) => {
     e.preventDefault();
     return dispatch({ type: "login" });
@@ -47,17 +52,20 @@ const DesktopNavbar = ({ Home, About, Faq, Reviews, Login, Signup }) => {
             </li>
           </ul>
         </div>
-        <div className="icons">
-          <ul>
-            <button onClick={loginHandler}>{Login.text}</button>
-            <button
-              onClick={signupHandler}
-              style={{ backgroundColor: "#212121" }}
-            >
-              {Signup.text}
-            </button>
-          </ul>
-        </div>
+        {!ifUser && (
+          <div className="icons">
+            <ul>
+              <button onClick={loginHandler}>{Login.text}</button>
+              <button
+                onClick={signupHandler}
+                style={{ backgroundColor: "#212121" }}
+              >
+                {Signup.text}
+              </button>
+            </ul>
+          </div>
+        )}
+        {ifUser && <LoggedInUser />}
       </div>
     </Nav>
   );
@@ -68,6 +76,7 @@ export default DesktopNavbar;
 const Nav = styled.nav`
   @import url("https://fonts.googleapis.com/css2?family=Signika+Negative:wght@600&display=swap");
   @import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap");
+  box-shadow: 1px 1px 15px 1px rgba(0,0,0,0.1);
   .navbar-main {
     display: flex;
     justify-content: space-between;

@@ -2,6 +2,7 @@ import React from "react";
 import image from "../../image/bgimage.jpg";
 import styled from "styled-components";
 
+
 const Hero = () => {
   return (
     <Main>

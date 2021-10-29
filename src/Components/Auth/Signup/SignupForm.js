@@ -1,35 +1,66 @@
 import styled from "styled-components";
 import React from "react";
-// import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../firebase";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Slide } from "react-toastify";
 
-const SignupForm = ({alreadyHaveAccount}) => {
+const SignupForm = ({ alreadyHaveAccount }) => {
+  const [loading, setLoading] = React.useState(false);
+  const emailRef = React.useRef();
+  const passwordRef = React.useRef();
+  const confirmpassRef = React.useRef();
 
-  const emailRef = React.useRef()
-  const passwordRef = React.useRef()
-  const confirmpassRef = React.useRef()
-
-  const submitHandler = (e) => {
-    // const auth = getAuth()
-    e.preventDefault()
+  const submitHandler = async (e) => {
+    e.preventDefault();
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const confPassword = confirmpassRef.current.value;
-    
+
     if (password !== confPassword) {
-      console.log("its working")
-        toast.error("Password Doesn't Match", {
-          position: toast.POSITION.TOP_RIGHT,
-          theme: "colored"
-        })
-        return false;
+      toast.error("Password Doesn't Match!", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+        theme: "colored",
+        transition: Slide
+      });
+      return false;
     }
-    
-    // createUserWithEmailAndPassword(auth, emailRef.current.value, passwordRef.current.value)
 
+    if (password.length < 6) {
+      toast.error("Weak Password! Min 6 Char", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+        theme: "colored",
+        transition: Slide
+      });
+      return false;
+    }
+    try {
+      setLoading(true);
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      toast.error(error.code, {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+        theme: "colored",
+        transition: Slide
+      });
+      console.clear()
+      setLoading(false)
+      return false;
+    }
+    setLoading(false);
+    toast.success("Account Created Successfully", {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 5000,
+      theme: "colored",
+      transition: Slide
+    });
+  };
 
-  }
 
   return (
     <MainLoginForm>
@@ -40,17 +71,42 @@ const SignupForm = ({alreadyHaveAccount}) => {
         <form onSubmit={submitHandler} className="login-form">
           <div>
             <label htmlFor="email">Email:</label>
-            <input ref={emailRef} required type="email" id="email" placeholder="Enter Email" />
+            <input
+              ref={emailRef}
+              required
+              type="email"
+              id="email"
+              placeholder="Enter Email"
+            />
           </div>
           <div>
             <label htmlFor="password">Password:</label>
-            <input ref={passwordRef} required type="password" id="password" placeholder="Enter Password" />
+            <input
+              ref={passwordRef}
+              required
+              type="password"
+              id="password"
+              placeholder="Enter Password"
+            />
           </div>
           <div>
             <label htmlFor="repassword">Re-Password:</label>
-            <input ref={confirmpassRef} required type="password" id="repassword" placeholder="Re-Enter Password" />
+            <input
+              ref={confirmpassRef}
+              required
+              type="password"
+              id="repassword"
+              placeholder="Re-Enter Password"
+            />
           </div>
-          <button type="submit">Sign Up</button>
+          <button disabled={loading} type="submit">
+            {loading && <><span
+              className="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="false"
+            ></span>{" "}</>}
+            Sign Up
+          </button>
         </form>
         <div className="links">
           Already Have an Account<p onClick={alreadyHaveAccount}>Login Now?</p>
@@ -64,7 +120,11 @@ export default SignupForm;
 
 const MainLoginForm = styled.div`
   box-sizing: border-box;
-  background: linear-gradient(to bottom, rgba(106,190,131,0.5), rgba(242,244,246,1));
+  background: linear-gradient(
+    to bottom,
+    rgba(106, 190, 131, 0.5),
+    rgba(242, 244, 246, 1)
+  );
   border-radius: 10px;
 
   .form {
@@ -122,26 +182,30 @@ const MainLoginForm = styled.div`
     border: none;
     outline: none;
     margin-top: 8px;
-    background: rgba(106,190,131,1);
+    background: rgba(0, 154, 49, 1);
     color: #fff;
     border-radius: 20px;
-    transition: 0.3s ease;
+    transition: 0.2s ease;
+  }
 
+  .login-form button:disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   .login-form button:hover {
-      background: rgba(115,158,59,1);
+    background: rgba(103, 161, 37, 1);
   }
 
   .links {
-      margin: 1rem 0;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
   .links p {
-      color: dodgerblue;
-      cursor: pointer;
+    color: dodgerblue;
+    cursor: pointer;
   }
 `;

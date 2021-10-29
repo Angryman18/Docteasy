@@ -1,22 +1,111 @@
 import styled from "styled-components";
+import { signInWithEmailAndPassword } from "@firebase/auth";
+import { auth } from "../../../firebase";
+import React from "react";
+import { toast } from "react-toastify";
+import { Slide } from "react-toastify";
 
-const LoginForm = ({createAccount}) => {
+const LoginForm = ({ createAccount }) => {
+  const emailRef = React.useRef();
+  const passRef = React.useRef();
+
+
+  const [loading, setLoading] = React.useState(false);
+  // const [user, setUser] = React.useState({});
+
+  const LoginHandler = async (e) => {
+    e.preventDefault();
+
+    const email = emailRef.current.value;
+    const password = passRef.current.value;
+
+    if (password.length < 6) {
+      toast.error("Enter a Valid Password", {
+        position: toast.POSITION.TOP_RIGHT,
+        theme: "colored",
+        transition: Slide,
+        autoClose: 4000,
+      });
+      return false;
+    }
+    if (
+      !email.match(
+        //eslint-disable-next-line
+        /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+      )
+    ) {
+      toast.error("Enter a Valid Email", {
+        position: toast.POSITION.TOP_RIGHT,
+        theme: "colored",
+        transition: Slide,
+        autoClose: 4000,
+      });
+      return false;
+    }
+
+    try {
+      setLoading(true);
+      const req = await signInWithEmailAndPassword(auth, email, password);
+      console.log(req);
+    } catch (error) {
+      console.clear();
+      toast.error("Invalid Email or Password", {
+        position: toast.POSITION.TOP_RIGHT,
+        theme: "colored",
+        transition: Slide,
+        autoClose: 4000,
+      });
+      setLoading(false);
+      return false;
+    }
+    toast.success("Logged In Successfully!", {
+      position: toast.POSITION.TOP_RIGHT,
+      theme: "colored",
+      transition: Slide,
+      autoClose: 4000,
+    });
+    setLoading(false);
+  };
+
   return (
     <MainLoginForm>
       <div className="form">
         <div className="form-header">
           <h3>Login</h3>
         </div>
-        <form className="login-form">
+        <form onSubmit={LoginHandler} className="login-form">
           <div>
             <label htmlFor="email">Email:</label>
-            <input required type="email" id="email" placeholder="Enter Email" />
+            <input
+              required
+              type="email"
+              id="email"
+              ref={emailRef}
+              placeholder="Enter Email"
+            />
           </div>
           <div>
             <label htmlFor="password">Password:</label>
-            <input required type="password" id="password" placeholder="Enter Password" />
+            <input
+              required
+              type="password"
+              ref={passRef}
+              id="password"
+              placeholder="Enter Password"
+            />
           </div>
-          <button type="submit">Login</button>
+          <button type="submit" disabled={loading}>
+            {loading && (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="false"
+                ></span>{" "}
+              </>
+            )}
+            Login
+          </button>
         </form>
         <div className="links">
           <p>Forget Password!</p>
@@ -31,7 +120,11 @@ export default LoginForm;
 
 const MainLoginForm = styled.div`
   box-sizing: border-box;
-  background: linear-gradient(to bottom, rgba(91,209,215,0.7), rgba(242,244,246,1));
+  background: linear-gradient(
+    to bottom,
+    rgba(91, 209, 215, 0.7),
+    rgba(242, 244, 246, 1)
+  );
   border-radius: 10px;
 
   .form {
@@ -89,26 +182,30 @@ const MainLoginForm = styled.div`
     border: none;
     outline: none;
     margin-top: 8px;
-    background: rgba(18,27,116,1);
+    background: rgba(18, 27, 116, 1);
     color: #fff;
     border-radius: 20px;
     transition: 0.3s ease;
+  }
 
+  .login-form button:disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   .login-form button:hover {
-      background: rgba(45,36,138,1);
+    background: rgba(45, 36, 138, 1);
   }
 
   .links {
-      margin: 1rem 0;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
   .links p {
-      color: dodgerblue;
-      cursor: pointer;
+    color: dodgerblue;
+    cursor: pointer;
   }
 `;

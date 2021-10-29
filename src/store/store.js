@@ -1,11 +1,13 @@
 import { createStore } from "redux";
+import AuthReducer from "./authStore";
+import {combineReducers} from 'redux';
 
 const defaultValue = {
   Login: false,
   Signup: false,
 };
 
-const reducer = (state = defaultValue, actions) => {
+const GlobalReducer = (state = defaultValue, actions) => {
   switch (actions.type) {
     case "login":
       return { Signup: false, Login: true };
@@ -18,4 +20,6 @@ const reducer = (state = defaultValue, actions) => {
   }
 };
 
-export const AppStore = createStore(reducer);
+const rootReducer = combineReducers({AuthReducer, GlobalReducer})
+
+export const AppStore = createStore(rootReducer);

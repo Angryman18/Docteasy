@@ -8,19 +8,39 @@ import Navbar from "./Components/Header/Navbar";
 import { useSelector } from "react-redux";
 import Login from "./Components/Auth/Login/Login";
 import Signup from "./Components/Auth/Signup/Signup";
+import { ToastContainer } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { Route } from "react-router";
+
+import { onAuthStateChanged } from "@firebase/auth";
+import { auth } from "./firebase";
 
 function App() {
-  const LoginValue = useSelector((state) => state.Login);
-  const SignupValue = useSelector((state) => state.Signup);
+  const LoginValue = useSelector((state) => state.GlobalReducer.Login);
+  const SignupValue = useSelector((state) => state.GlobalReducer.Signup);
+  const ifLoggedIn = useSelector((state) => state.AuthReducer.LoggedIn);
+  // const ifUser = useSelector((state) => state.AuthReducer.ifUser);
+
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      dispatch({ type: "setCookie", user: user });
+    });
+  }, [dispatch]);
+
 
   return (
     <React.Fragment>
-      {LoginValue && <Login />}
+      <ToastContainer limit={3} />
+      {LoginValue && !ifLoggedIn && <Login />}
       {SignupValue && <Signup />}
       <Navbar />
-      <Hero />
-      <Faq />
-      <ReviewSlider />
+      <Route exact path="/">
+        <Hero />
+        <Faq />
+        <ReviewSlider />
+      </Route>
     </React.Fragment>
   );
 }
