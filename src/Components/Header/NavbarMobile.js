@@ -3,10 +3,11 @@ import { useState } from "react";
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../image/logo.svg";
+import { useDispatch } from "react-redux";
 
 const MobileNavbar = ({ Home, About, Faq, Reviews }) => {
   const [visible, setVisible] = useState(false);
-
+  const dispatch = useDispatch();
   // let mainclass = "m-nav-main";
   // React.useEffect(() => {
   //   mainclass = "m-nav-main active";
@@ -15,11 +16,23 @@ const MobileNavbar = ({ Home, About, Faq, Reviews }) => {
   //   }, 2000);
   // }, [visible]);
 
+  const LoginHandler = (e) => {
+    e.preventDefault();
+    dispatch({ type: "login" });
+  };
+
+  const SignupHandler = (e) => {
+    e.preventDefault();
+    dispatch({ type: "signup" });
+  };
+
   return (
     <MobileNav>
       <div className="m-nav-main">
         <div className="m-logo">
-          <Link to={Home.link}><img src={logo} alt="logo" /></Link>
+          <Link to={Home.link}>
+            <img src={logo} alt="logo" />
+          </Link>
         </div>
         <div onClick={() => setVisible(!visible)} className="m-hamburger">
           <i className="fas fa-bars"></i>
@@ -39,6 +52,16 @@ const MobileNavbar = ({ Home, About, Faq, Reviews }) => {
             </li>
             <li>
               <Link to={Reviews.link}>{Reviews.text}</Link>
+            </li>
+            <li>
+              <button onClick={LoginHandler} className="btn btn-primary">
+                Login
+              </button>
+            </li>
+            <li>
+              <button onClick={SignupHandler} className="btn btn-dark">
+                Signup
+              </button>
             </li>
           </ul>
         </div>

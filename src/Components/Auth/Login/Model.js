@@ -54,6 +54,15 @@ const ModelComp = styled.div`
   transform: translate(-50%, -50%);
   animation: modelAnimation 0.2s ease-out;
 
+  @media screen and (max-width: 768px) {
+    width: 400px;
+  }
+
+  @media screen and (max-width: 400px) {
+    width: 95%;
+
+  }
+
   .Close {
     position: absolute;
     right: 20px;

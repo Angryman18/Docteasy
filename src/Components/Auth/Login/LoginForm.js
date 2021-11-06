@@ -1,70 +1,67 @@
 import styled from "styled-components";
-import { signInWithEmailAndPassword } from "@firebase/auth";
-import { auth } from "../../../firebase";
 import React from "react";
 import { toast } from "react-toastify";
-import { Slide } from "react-toastify";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { useHistory } from "react-router";
 
 const LoginForm = ({ createAccount }) => {
-  const emailRef = React.useRef();
-  const passRef = React.useRef();
-
+  const dispatch = useDispatch();
+  const history = useHistory()
 
   const [loading, setLoading] = React.useState(false);
-  // const [user, setUser] = React.useState({});
+  const [credential, setCredential] = React.useState({
+    identifier: "",
+    password: "",
+  });
 
   const LoginHandler = async (e) => {
     e.preventDefault();
 
-    const email = emailRef.current.value;
-    const password = passRef.current.value;
+    if (credential.identifier === "" || credential.password === "") {
+      toast.error("Fields cannot be clank", {
+        position: toast.POSITION.TOP_RIGHT,
+        theme: "colored",
+        autoClose: 4000,
+      });
+      return false;
+    }
 
-    if (password.length < 6) {
+    if (credential.password.length < 6) {
       toast.error("Enter a Valid Password", {
         position: toast.POSITION.TOP_RIGHT,
         theme: "colored",
-        transition: Slide,
-        autoClose: 4000,
-      });
-      return false;
-    }
-    if (
-      !email.match(
-        //eslint-disable-next-line
-        /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-      )
-    ) {
-      toast.error("Enter a Valid Email", {
-        position: toast.POSITION.TOP_RIGHT,
-        theme: "colored",
-        transition: Slide,
         autoClose: 4000,
       });
       return false;
     }
 
+    setLoading(true);
     try {
-      setLoading(true);
-      const req = await signInWithEmailAndPassword(auth, email, password);
-      console.log(req);
+      const resp = await axios.post(`${process.env.REACT_APP_URL}/auth/local`, {
+        identifier: credential.identifier,
+        password: credential.password,
+      });
+      toast.success("Logged In Successfully", {
+        position: toast.POSITION.TOP_RIGHT,
+        theme: "colored",
+        autoClose: 3000,
+      });
+      setLoading(false);
+      dispatch({type: "reset"})
+      dispatch({type: "userLogin", token: resp.data.jwt})
+      history.push("/dashboard")
+      
     } catch (error) {
       console.clear();
       toast.error("Invalid Email or Password", {
         position: toast.POSITION.TOP_RIGHT,
         theme: "colored",
-        transition: Slide,
-        autoClose: 4000,
+        autoClose: 3000,
       });
       setLoading(false);
       return false;
     }
-    toast.success("Logged In Successfully!", {
-      position: toast.POSITION.TOP_RIGHT,
-      theme: "colored",
-      transition: Slide,
-      autoClose: 4000,
-    });
-    setLoading(false);
   };
 
   return (
@@ -75,13 +72,17 @@ const LoginForm = ({ createAccount }) => {
         </div>
         <form onSubmit={LoginHandler} className="login-form">
           <div>
-            <label htmlFor="email">Email:</label>
+            <label htmlFor="identifier">Email:</label>
             <input
               required
-              type="email"
-              id="email"
-              ref={emailRef}
-              placeholder="Enter Email"
+              type="text"
+              id="identifier"
+              placeholder="Enter Email or Username"
+              onChange={(e) =>
+                setCredential((pre) => {
+                  return { ...pre, identifier: e.target.value };
+                })
+              }
             />
           </div>
           <div>
@@ -89,9 +90,13 @@ const LoginForm = ({ createAccount }) => {
             <input
               required
               type="password"
-              ref={passRef}
               id="password"
               placeholder="Enter Password"
+              onChange={(e) =>
+                setCredential((pre) => {
+                  return { ...pre, password: e.target.value };
+                })
+              }
             />
           </div>
           <button type="submit" disabled={loading}>
@@ -126,6 +131,7 @@ const MainLoginForm = styled.div`
     rgba(242, 244, 246, 1)
   );
   border-radius: 10px;
+
 
   .form {
     display: flex;

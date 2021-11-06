@@ -1,30 +1,77 @@
 import styled from "styled-components";
 import React from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../firebase";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Slide } from "react-toastify";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 
 const SignupForm = ({ alreadyHaveAccount }) => {
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = React.useState(false);
-  const emailRef = React.useRef();
-  const passwordRef = React.useRef();
-  const confirmpassRef = React.useRef();
+
+  const [credential, setCredential] = React.useState({
+    username: "",
+    password: "",
+    confPassword: "",
+    email: "",
+  });
+
+  const emailHandler = (e) => {
+    setCredential((pre) => {
+      return { ...pre, email: e.target.value };
+    });
+  };
+
+  const usernameHandler = (e) => {
+    setCredential((pre) => {
+      return { ...pre, username: e.target.value };
+    });
+  };
+
+  const passwordHandler = (e) => {
+    setCredential((pre) => {
+      return { ...pre, password: e.target.value };
+    });
+  };
+
+  const confPasswordHandler = (e) => {
+    setCredential((pre) => {
+      return { ...pre, confPassword: e.target.value };
+    });
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
-    const confPassword = confirmpassRef.current.value;
+    const { username, email, password, confPassword } = credential;
 
+    if (!username.match(/^([a-zA-Z0-9]+)$/g)) {
+      toast.error("Username contains only Letters & Numbers", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 4000,
+        theme: "colored",
+      });
+      return false;
+    }
+
+    if (
+      !email.match(
+        /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+      )
+    ) {
+      toast.error("Invalid Email Address", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+        theme: "colored",
+      });
+      return false;
+    }
     if (password !== confPassword) {
       toast.error("Password Doesn't Match!", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
         theme: "colored",
-        transition: Slide
       });
       return false;
     }
@@ -34,33 +81,52 @@ const SignupForm = ({ alreadyHaveAccount }) => {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
         theme: "colored",
-        transition: Slide
       });
       return false;
     }
+
+    const obj = {
+      username,
+      password,
+      email,
+    };
+
+    setLoading(true);
     try {
-      setLoading(true);
-      await createUserWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      toast.error(error.code, {
+      const req = await axios.post(
+        `${process.env.REACT_APP_URL}/auth/local/register`,
+        obj
+      );
+
+      console.log(req)
+
+      if (req.status !== 200) {
+        toast.error("Failed to Signup", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+          theme: "colored",
+        });
+        setLoading(false);
+        return false;
+      }
+
+      setLoading(false);
+      toast.success("Signed Up Successfully. Login Now.", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
         theme: "colored",
-        transition: Slide
       });
-      console.clear()
-      setLoading(false)
+      dispatch({ type: "login" });
+    } catch (err) {
+      toast.error("Username or Email already Taken", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+        theme: "colored",
+      });
+      setLoading(false);
       return false;
     }
-    setLoading(false);
-    toast.success("Account Created Successfully", {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 5000,
-      theme: "colored",
-      transition: Slide
-    });
   };
-
 
   return (
     <MainLoginForm>
@@ -70,41 +136,55 @@ const SignupForm = ({ alreadyHaveAccount }) => {
         </div>
         <form onSubmit={submitHandler} className="login-form">
           <div>
+            <label htmlFor="username">Username:</label>
+            <input
+              required
+              type="text"
+              id="username"
+              placeholder="Enter Username"
+              onChange={usernameHandler}
+            />
+          </div>
+          <div>
             <label htmlFor="email">Email:</label>
             <input
-              ref={emailRef}
               required
-              type="email"
+              type="text"
               id="email"
               placeholder="Enter Email"
+              onChange={emailHandler}
             />
           </div>
           <div>
             <label htmlFor="password">Password:</label>
             <input
-              ref={passwordRef}
               required
               type="password"
               id="password"
               placeholder="Enter Password"
+              onChange={passwordHandler}
             />
           </div>
           <div>
             <label htmlFor="repassword">Re-Password:</label>
             <input
-              ref={confirmpassRef}
               required
               type="password"
               id="repassword"
               placeholder="Re-Enter Password"
+              onChange={confPasswordHandler}
             />
           </div>
           <button disabled={loading} type="submit">
-            {loading && <><span
-              className="spinner-border spinner-border-sm"
-              role="status"
-              aria-hidden="false"
-            ></span>{" "}</>}
+            {loading && (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="false"
+                ></span>{" "}
+              </>
+            )}
             Sign Up
           </button>
         </form>

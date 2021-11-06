@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const LoggedInUser = () => {
+  const SignOut = () => {};
+
   return (
     <LoggedUser>
       <div className="btn-group dropleft">
@@ -21,9 +23,9 @@ const LoggedInUser = () => {
           <Link className="dropdown-item" to="/account">
             Account
           </Link>
-          <Link className="dropdown-item" to="/signout">
+          <button onClick={SignOut} className="dropdown-item" to="/signout">
             Sign Out
-          </Link>
+          </button>
         </div>
       </div>
     </LoggedUser>

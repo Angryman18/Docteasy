@@ -46,7 +46,7 @@ const MainSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1.2rem 0;
+  /* margin: 0.5rem 0; */
   box-sizing: border-box;
   padding: 0;
   animation: aprearText 0.5s ease;
@@ -80,7 +80,7 @@ const MainSection = styled.div`
     border-radius: 5px;
     transition: 0.3s ease;
     border: 2px solid rgba(0, 0, 0, 0.1);
-    margin: 10px 0;
+    margin: 5px 0;
     position: relative;
   }
 

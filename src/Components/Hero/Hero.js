@@ -1,18 +1,30 @@
 import React from "react";
-import image from "../../image/bgimage.jpg";
 import styled from "styled-components";
-
+import { useDispatch } from "react-redux";
+import Images from "../../image";
 
 const Hero = () => {
+
+  const dispatch = useDispatch()
+
+  const makeLogin = e => {
+    e.preventDefault()
+    dispatch({type: "login"})
+    // toast.info("Please Login or Signup to Continue", {
+    //   position: toast.POSITION.TOP_RIGHT,
+    //   theme: "colored",
+    //   autoClose: 3000,
+    // });
+  }
   return (
     <Main>
       <div className="hero">
-        <img className="image" src={image} alt="background" />
+        <img className="image" src={Images.background} alt="background" />
         <div className="shadow"></div>
         <div className="text">
           <div className="inner_text">
             <p>Consult with a Doctor Now?</p>
-            <button>Consult a Doctor</button>
+            <button onClick={makeLogin}>Consult a Doctor</button>
           </div>
         </div>
       </div>
