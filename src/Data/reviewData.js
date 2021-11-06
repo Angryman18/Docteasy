@@ -8,8 +8,7 @@ const reviewData = [
         rating: 4.5,
         text: `Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text ever
-        since the 1500s, when an unknown printer took a galley of type and
-        scrambled it to make a type specimen book. `
+        since the 1500s, when an unknown printer took a galley of type.`
     },
     {
         id: 2,
@@ -18,9 +17,7 @@ const reviewData = [
         rating: 4,
         text: `Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text ever
-        since the 1500s, when an unknown printer took a galley of type and
-        scrambled it to make a type specimen book. It has survived not only
-        five centuries.`
+        since the 1500s.`
     },
     {
         id: 3,
@@ -28,7 +25,9 @@ const reviewData = [
         avatar: require('../image/reviewImages/4.jpg').default,
         rating: 5,
         text: `Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry.`
+        industry. Lorem Ipsum has been the industry's standard dummy text ever
+        since the 1500s, when an unknown printer took a galley of type and
+        scrambled.`
     },
     {
         id: 4,

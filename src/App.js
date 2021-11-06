@@ -13,6 +13,8 @@ import { Redirect, Route } from "react-router";
 import AuthPage from "./Components/Auth/Auth Pages/AuthPage";
 import Dashboard from "./Components/Auth/Dashboard/Index";
 import Footer from "./Components/Footer/footer";
+import Account from "./Components/Auth/Account/Account";
+import About from "./Components/Page/About";
 
 function App() {
   const LoginValue = useSelector((state) => state.GlobalReducer.Login);
@@ -36,6 +38,14 @@ function App() {
         <Redirect to="/" />
       )}
 
+      {Logged ? (
+        <Route path="/account">
+          <Account />
+        </Route>
+      ) : (
+        <Redirect to="/" />
+      )}
+
       {/* UNPROTECTED CONTENT */}
       {!Logged && <Navbar />}
       <Route exact path="/">
@@ -49,6 +59,9 @@ function App() {
         ) : (
           <Redirect to="/dashboard" />
         )}
+      </Route>
+      <Route exact path="/about">
+        {!Logged ? <About /> : <Redirect to="/dashboard" />}
       </Route>
     </React.Fragment>
   );
