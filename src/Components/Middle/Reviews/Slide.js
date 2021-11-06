@@ -72,12 +72,14 @@ const Mainsection = styled.div`
     height: 100px;
     object-fit: cover;
     border-radius: 50%;
+    border: 1px solid #aaa;
   }
   .review_text {
     margin: 0.5rem 0;
     width: 50%;
     min-width: 250px;
     text-align: justify;
+    font-style: italic;
     text-justify: inter-word;
   }
   @media screen and (max-width: 768px) {

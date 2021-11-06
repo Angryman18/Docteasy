@@ -112,4 +112,14 @@ const MainSection = styled.div`
       min-width: 300px;
     }
   }
+
+  @media screen and (max-width: 480px) {
+    .item-question {
+      font-size: 0.9rem;
+    }
+
+    .card-body {
+      font-size: 0.9rem;
+    }
+  }
 `;

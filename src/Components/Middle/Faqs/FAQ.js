@@ -30,4 +30,10 @@ const Main = styled.div`
         padding: 0;
     }
 
+    @media screen and (max-width: 480px) {
+        h4 {
+            font-size: 1.2rem;
+        }
+    }
+
 `

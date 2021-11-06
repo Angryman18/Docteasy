@@ -81,13 +81,14 @@ const Title = styled.h2`
   .title {
     font-size: clamp(1.5rem, 2vw, 2rem);
     position: relative;
+    color: #2c387e;
   }
 
   .title::after {
     content: "";
     width: 10vw;
     height: 2px;
-    background-color: #212121;
+    background-color: #2c387e;
     position: absolute;
     top: 50%;
     right: 0;
@@ -98,7 +99,7 @@ const Title = styled.h2`
     content: "";
     width: 10vw;
     height: 2px;
-    background-color: #212121;
+    background-color: #2c387e;
     position: absolute;
     top: 50%;
     /* left: -100%; */

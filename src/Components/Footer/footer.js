@@ -103,6 +103,15 @@ const FooterMiddle = styled.div`
   section ul li a {
     color: #50c1e9;
   }
+
+  @media screen and (max-width: 480px) {
+    hr {
+      background-color: #fff;
+    }
+    h4 {
+      font-size: 1.2rem;
+    }
+  }
 `;
 
 const SocialMedia = styled.div`
@@ -111,6 +120,8 @@ const SocialMedia = styled.div`
   section {
     display: flex;
     flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
   }
 
   hr {
@@ -127,6 +138,17 @@ const SocialMedia = styled.div`
   }
   section i:hover {
     color: #00a0ff;
+  }
+
+  @media screen and (max-width: 480px) {
+    hr {
+      background-color: #fff;
+      height: 1px;
+    }
+    h4 {
+      font-size: 1.2rem;
+    }
+    
   }
 `;
 
