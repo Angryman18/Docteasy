@@ -55,18 +55,6 @@ const SignupForm = ({ alreadyHaveAccount }) => {
       return false;
     }
 
-    if (
-      !email.match(
-        /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-      )
-    ) {
-      toast.error("Invalid Email Address", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-        theme: "colored",
-      });
-      return false;
-    }
     if (password !== confPassword) {
       toast.error("Password Doesn't Match!", {
         position: toast.POSITION.TOP_RIGHT,
