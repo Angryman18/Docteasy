@@ -3,8 +3,10 @@ import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { useDispatch } from "react-redux";
 
+
 const Model = ({ children }) => {
   const dispatch = useDispatch();
+ 
   const closeOverlay = () => {
     return dispatch({ type: "reset" });
   };
@@ -32,7 +34,7 @@ const Model = ({ children }) => {
   );
 };
 
-export default Model;
+export default React.memo(Model);
 
 const Backdrop = styled.div`
   width: 100%;

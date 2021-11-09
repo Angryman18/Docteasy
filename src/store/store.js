@@ -1,10 +1,12 @@
 import { createStore } from "redux";
 import AuthReducer from "./authStore";
 import {combineReducers} from 'redux';
+import NotificationReducer from "./notification";
 
 const defaultValue = {
   Login: false,
   Signup: false,
+  Visible: false,
 };
 
 const GlobalReducer = (state = defaultValue, actions) => {
@@ -20,6 +22,6 @@ const GlobalReducer = (state = defaultValue, actions) => {
   }
 };
 
-const rootReducer = combineReducers({AuthReducer, GlobalReducer})
+const rootReducer = combineReducers({AuthReducer, GlobalReducer, NotificationReducer})
 
 export const AppStore = createStore(rootReducer);

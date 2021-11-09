@@ -1,4 +1,3 @@
-import AuthMobileNav from "../Header/AuthMobileNav";
 import AuthNavbar from "../Header/Navbar";
 
 const AuthPage = () => {

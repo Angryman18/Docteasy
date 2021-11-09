@@ -15,6 +15,7 @@ import Dashboard from "./Components/Auth/Dashboard/Index";
 import Footer from "./Components/Footer/footer";
 import Account from "./Components/Auth/Account/Account";
 import About from "./Components/Page/About";
+import AboutSection from "./Components/Middle/About";
 
 function App() {
   const LoginValue = useSelector((state) => state.GlobalReducer.Login);
@@ -53,6 +54,7 @@ function App() {
           <>
             <Hero />
             <Faq />
+            <AboutSection />
             <ReviewSlider />
             <Footer />
           </>

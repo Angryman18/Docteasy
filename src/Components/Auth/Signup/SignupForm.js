@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import React from "react";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -47,28 +46,31 @@ const SignupForm = ({ alreadyHaveAccount }) => {
     const { username, email, password, confPassword } = credential;
 
     if (!username.match(/^([a-zA-Z0-9]+)$/g)) {
-      toast.error("Username contains only Letters & Numbers", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 4000,
-        theme: "colored",
+      dispatch({
+        type: "visible",
+        timer: 3000,
+        message: "Username contains only Letters & Numbers",
+        color: "ERROR",
       });
       return false;
     }
 
     if (password !== confPassword) {
-      toast.error("Password Doesn't Match!", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-        theme: "colored",
+      dispatch({
+        type: "visible",
+        timer: 3000,
+        message: "Password Doesnot Match",
+        color: "ERROR"
       });
       return false;
     }
 
     if (password.length < 6) {
-      toast.error("Weak Password! Min 6 Char", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-        theme: "colored",
+      dispatch({
+        type: "visible",
+        timer: 3000,
+        message: "Weak Password. Min 6 Chars.",
+        color: "ERROR"
       });
       return false;
     }
@@ -86,30 +88,32 @@ const SignupForm = ({ alreadyHaveAccount }) => {
         obj
       );
 
-      console.log(req)
 
       if (req.status !== 200) {
-        toast.error("Failed to Signup", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-          theme: "colored",
+        dispatch({
+          type: "visible",
+          timer: 3000,
+          message: "Failed to Signup! Please try again",
+          color: "ERROR"
         });
         setLoading(false);
         return false;
       }
 
       setLoading(false);
-      toast.success("Signed Up Successfully. Login Now.", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-        theme: "colored",
+      dispatch({
+        type: "visible",
+        timer: 4000,
+        message: "Signed Up Successfully! Login Now.",
+        color: "SUCCESS"
       });
       dispatch({ type: "login" });
     } catch (err) {
-      toast.error("Username or Email already Taken", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-        theme: "colored",
+      dispatch({
+        type: "visible",
+        timer: 3000,
+        message: "Username or Email already taken",
+        color: "ERROR"
       });
       setLoading(false);
       return false;

@@ -1,13 +1,12 @@
 import styled from "styled-components";
 import React from "react";
-import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useHistory } from "react-router";
 
 const LoginForm = ({ createAccount }) => {
   const dispatch = useDispatch();
-  const history = useHistory()
+  const history = useHistory();
 
   const [loading, setLoading] = React.useState(false);
   const [credential, setCredential] = React.useState({
@@ -19,19 +18,21 @@ const LoginForm = ({ createAccount }) => {
     e.preventDefault();
 
     if (credential.identifier === "" || credential.password === "") {
-      toast.error("Fields cannot be clank", {
-        position: toast.POSITION.TOP_RIGHT,
-        theme: "colored",
-        autoClose: 4000,
+      dispatch({
+        type: "visible",
+        message: "Fields Cannot be Blank",
+        timer: 3000,
+        color: "ERROR",
       });
       return false;
     }
 
     if (credential.password.length < 6) {
-      toast.error("Enter a Valid Password", {
-        position: toast.POSITION.TOP_RIGHT,
-        theme: "colored",
-        autoClose: 4000,
+      dispatch({
+        type: "visible",
+        message: "Please Enter a Valid Password",
+        timer: 3000,
+        color: "ERROR",
       });
       return false;
     }
@@ -42,22 +43,23 @@ const LoginForm = ({ createAccount }) => {
         identifier: credential.identifier,
         password: credential.password,
       });
-      toast.success("Logged In Successfully", {
-        position: toast.POSITION.TOP_RIGHT,
-        theme: "colored",
-        autoClose: 3000,
+      dispatch({
+        type: "visible",
+        message: "Logged In Successfully!",
+        timer: 4000,
+        color: "SUCCESS",
       });
       setLoading(false);
-      dispatch({type: "reset"})
-      dispatch({type: "userLogin", token: resp.data.jwt})
-      history.push("/dashboard")
-      
+      dispatch({ type: "reset" });
+      dispatch({ type: "userLogin", token: resp.data.jwt });
+      history.push("/dashboard");
     } catch (error) {
       console.clear();
-      toast.error("Invalid Email or Password", {
-        position: toast.POSITION.TOP_RIGHT,
-        theme: "colored",
-        autoClose: 3000,
+      dispatch({
+        type: "visible",
+        message: "Invalid Email ID or Password",
+        timer: 3000,
+        color: "ERROR",
       });
       setLoading(false);
       return false;
@@ -131,7 +133,6 @@ const MainLoginForm = styled.div`
     rgba(242, 244, 246, 1)
   );
   border-radius: 10px;
-
 
   .form {
     display: flex;

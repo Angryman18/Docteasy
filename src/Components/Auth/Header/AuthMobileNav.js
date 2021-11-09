@@ -3,23 +3,23 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import logo from "../../../image/logo.svg";
 import { useHistory } from "react-router";
-import { toast } from "react-toastify";
 
 const AuthMobileNav = () => {
   const dispatch = useDispatch();
-  const history = useHistory()
+  const history = useHistory();
   const ifLoggedIn = useSelector((state) => state.AuthReducer.ifLoggedIn);
 
   const SignoutHandler = () => {
     if (ifLoggedIn) {
       dispatch({ type: "Signout" });
     }
-    toast.info("Signed Out!", {
-      position: toast.POSITION.TOP_RIGHT,
-      theme: "colored",
-      autoClose: 3000,
+    dispatch({
+      type: "visible",
+      timer: 3000,
+      message: "Signed Out Successfully!",
+      color: "INFO",
     });
-    history.push("/")
+    history.push("/");
   };
 
   return (

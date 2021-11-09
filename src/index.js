@@ -5,6 +5,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { AppStore } from "./store/store";
+import CustomNotification from "./Notification/notification";
 
 ReactDOM.render(
   <Provider store={AppStore}>
@@ -15,4 +16,11 @@ ReactDOM.render(
     </BrowserRouter>
   </Provider>,
   document.getElementById("root")
+);
+
+ReactDOM.render(
+  <Provider store={AppStore}>
+    <CustomNotification />
+  </Provider>,
+  document.getElementById("notification")
 );
